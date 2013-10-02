@@ -1,6 +1,6 @@
 package Server;
 
-public class Main {
+public class sMain {
 	public static void main (String[] args) {
 		System.out.println("Kak Touch");
 	}
