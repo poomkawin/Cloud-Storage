@@ -2,6 +2,6 @@ package Server;
 
 public class Main {
 	public static void main (String[] args) {
-		System.out.println("Kak Mon");
+		System.out.println("Kak Touch");
 	}
 }
