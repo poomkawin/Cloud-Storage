@@ -5,6 +5,9 @@ import java.net.*;
 
 public class serverSocket extends Thread{
 	private ServerSocket sock;
+	private String recv;
+	private String recvHash;
+	private String content;
 	
 	serverSocket(int port) throws Exception{
 		sock = new ServerSocket(port);
@@ -16,16 +19,23 @@ public class serverSocket extends Thread{
 				Socket server = sock.accept();
 				System.out.println("Just connected to " + server.getRemoteSocketAddress());
 				DataInputStream in = new DataInputStream(server.getInputStream());
-				System.out.println(in.readUTF());
+				int byteLength = in.readInt();
+				byte[] bytes = new byte[byteLength];
+				in.readFully(bytes);
+				recv = new String(bytes, "UTF-8");
+				recvHash = recv.substring(0, 40);
+				content = recv.substring(40);
 				DataOutputStream out = new DataOutputStream(server.getOutputStream());
-				out.writeUTF("Thank you for connecting to " + server.getLocalSocketAddress() + "\nGoodbye!");
-				server.close();
-			}catch(SocketTimeoutException s){
-				System.out.println("Socket timed out!");
-				break;
-			}catch(IOException e){
+				if(hash.sha1(content).equals(recvHash)){
+					out.writeUTF("Okay");
+					System.out.println("Okay");
+//					out.writeUTF("Thank you for connecting to " + server.getLocalSocketAddress() + "\nGoodbye!");
+					server.close();
+				}else{
+					out.writeUTF("Error");
+				}
+			} catch (Exception e) {
 				e.printStackTrace();
-				break;
 			}
 		}
 	}
