@@ -16,7 +16,7 @@ public class serverSocket{
 			System.exit(0);
 		}
 
-		while (true) {
+		while(true) {
 			try {
 				Socket s = socket.accept();
 				System.out.println("New Client: "+s.getInetAddress().toString());

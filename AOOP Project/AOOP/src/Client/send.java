@@ -14,13 +14,21 @@ public class send implements Runnable{
 	private byte[] output;
 	
 	send(String serverName, int port, String input){
+		this(serverName, port, input.getBytes());
+	}
+	
+	send(String serverName, int port, File f){
 		this.serverName = serverName;
 		this.port = port;
-		bytes = input.getBytes();
 		try {
+			bytes = new byte[(int) f.length()];
+			FileInputStream fis = new FileInputStream(f);
+			fis.read(bytes);
+			fis.close();
+			
 			sha1hash = hash.sha1(bytes).getBytes();
-		} catch (Exception e1) {
-			e1.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		output = new byte[sha1hash.length + bytes.length];						// Constructing buffer
 		System.arraycopy(sha1hash, 0, output, 0, sha1hash.length);
@@ -64,8 +72,9 @@ public class send implements Runnable{
 	}
 	
 	public static void main(String[] args){
+		File f = new File("C:\\Users\\Touch\\Desktop\\test.rar");
 		try{
-			(new Thread(new send("127.0.0.1", 4444, "Hello"))).start();
+			(new Thread(new send("127.0.0.1", 4444, f))).start();
 		}catch(Exception e){
 			e.printStackTrace();
 		}

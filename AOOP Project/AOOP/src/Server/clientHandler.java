@@ -12,9 +12,8 @@ public class clientHandler implements Runnable {
 	
 	@Override
 	public void run(){
-		String recv;
 		String recvHash;
-		String content;
+		byte[] content;
 		DataInputStream in = null;
 		DataOutputStream out = null;
 		
@@ -30,13 +29,19 @@ public class clientHandler implements Runnable {
 			int byteLength = in.readInt();
 			byte[] bytes = new byte[byteLength];
 			in.readFully(bytes);
-			recv = new String(bytes, "UTF-8");
-			recvHash = recv.substring(0, 40);
-			content = recv.substring(40);
-			
+			recvHash = (new String(bytes, "UTF-8")).substring(0, 40);
+			content = new byte[byteLength - 40];
+			System.arraycopy(bytes, 40, content, 0, content.length);
+			System.out.println(recvHash);
+			System.out.println(hash.sha1(content));
 			if(hash.sha1(content).equals(recvHash)){
 				out.writeUTF("Okay");
-				System.out.println(recv);
+//				System.out.println(recv);
+				File f = new File("C:\\Users\\Touch\\Desktop\\test2.rar");
+				BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f));
+				bos.write(content);
+				bos.flush();
+				bos.close();
 			}else{
 				out.writeUTF("Error");
 				System.out.println("Okay");
