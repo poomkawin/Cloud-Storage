@@ -3,8 +3,6 @@ package Client;
 import java.io.*;
 import java.net.*;
 
-import Server.serverSocket;
-
 public class send extends Thread{
 	private Socket sock;
 	private String serverName;
@@ -57,7 +55,6 @@ public class send extends Thread{
 					sock.close();
 					break;
 				}
-				sock.close();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -66,8 +63,10 @@ public class send extends Thread{
 	
 	public static void main(String[] args){
 		try{
-			Thread t = new send("127.0.0.1", 4444, "Hello");
-			t.start();
+			for(int i=0; i<10; i++){
+				Thread t = new send("127.0.0.1", 4444, "Hello"+i);
+				t.start();
+			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
