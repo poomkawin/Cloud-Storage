@@ -3,7 +3,9 @@ package Client;
 import java.io.*;
 import java.net.*;
 
-public class send extends Thread{
+import Server.clientHandler;
+
+public class send implements Runnable{
 	private Socket sock;
 	private String serverName;
 	private int port;
@@ -63,10 +65,7 @@ public class send extends Thread{
 	
 	public static void main(String[] args){
 		try{
-			for(int i=0; i<10; i++){
-				Thread t = new send("127.0.0.1", 4444, "Hello"+i);
-				t.start();
-			}
+			(new Thread(new send("127.0.0.1", 4444, "Hello"))).start();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
